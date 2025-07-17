@@ -25,6 +25,7 @@ target/
 
 ### developer ###
 application-dev.properties
+application-prod.properties
 
 ### NetBeans ###
 /nbproject/private/
