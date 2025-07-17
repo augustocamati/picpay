@@ -1,0 +1,41 @@
+package com.example.picpay.picpay.domain.transactions;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import com.example.picpay.picpay.domain.user.User;
+
+import jakarta.annotation.Generated;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
+@Getter
+@Setter
+@Table(name = "transactions")
+@Entity(name = "transactions")
+public class Transaction {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private BigDecimal amount;
+
+  @OneToMany
+  @JoinColumn(name = "sender_id")
+  private User sender;
+  
+  @OneToMany
+  @JoinColumn(name = "receiver_id")
+  private User receiver;
+  
+
+  private LocalDateTime timestamp;
+}
