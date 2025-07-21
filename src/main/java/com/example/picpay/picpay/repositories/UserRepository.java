@@ -8,7 +8,6 @@ import com.example.picpay.picpay.domain.user.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByUsername(String username);
 
     Optional<User> findByEmail(String email);
 
