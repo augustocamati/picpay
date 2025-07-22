@@ -59,7 +59,7 @@ public class TransactionService {
 
   private void validateTransaction(TransactionDto transactionDto, User sender) {
 
-        if (!sender.isMerchant()) {
+        if (sender.isMerchant()) {
             throw new TransactionNotAllowedForUserTypeException();
         }
 
