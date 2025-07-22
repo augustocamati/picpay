@@ -55,6 +55,34 @@ public class User {
     this.document = createUserDto.document();
 
     this.userType = createUserDto.userType();
-}
+  }
 
+  public void credit(BigDecimal amount) {
+    this.balance = this.balance.add(amount);
+  }
+
+  public void debit(BigDecimal amount) {
+    this.balance = this.balance.subtract(amount);
+  }
+
+  public boolean isMerchant() {
+    return this.userType == UserType.MERCHANT;
+  }
+
+  public boolean isBalancerEqualOrGreatherThan(BigDecimal value) {
+    return this.balance.doubleValue() >= value.doubleValue();
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+        "id=" + id +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        ", document='" + document + '\'' +
+        ", email='" + email + '\'' +
+        ", balance=" + balance +
+        ", userType=" + userType +
+        '}';
+  }
 }
