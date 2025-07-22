@@ -25,6 +25,10 @@ import lombok.Setter;
 @Table(name = "transactions")
 @Entity(name = "transactions")
 public class Transaction {
+
+  
+
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -40,4 +44,11 @@ public class Transaction {
   
 
   private LocalDateTime timestamp;
+
+  public Transaction(User sender, User receiver, BigDecimal amount) {
+    this.sender = sender;
+    this.receiver = receiver;
+    this.amount = amount;
+    this.timestamp = LocalDateTime.now();
+  }
 }

@@ -14,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import com.example.picpay.picpay.domain.transactions.Transaction;
 import com.example.picpay.picpay.domain.user.User;
 import com.example.picpay.picpay.dto.request.transaction.TransactionDto;
+import com.example.picpay.picpay.exceptions.InsufficientBalanceException;
+import com.example.picpay.picpay.exceptions.TransactionNotAllowedForUserTypeException;
 import com.example.picpay.picpay.exceptions.TransactionNotAuthorizedException;
 import com.example.picpay.picpay.repositories.TransactionRepository;
 
@@ -34,20 +36,14 @@ public class TransactionService {
     User sender = this.userService.findUserById(transactionDto.senderId());
     User receiver = this.userService.findUserById(transactionDto.receiverId());
 
-    userService.validateTransaction(sender, transactionDto.amount());
+    validateTransaction(transactionDto, sender);
+  
 
-    if (!authorizeTransaction(sender, transactionDto.amount())) {
-      throw new TransactionNotAuthorizedException();
-    }
+    Transaction transaction = new Transaction(sender, receiver, transactionDto.amount());
+  
 
-    Transaction transaction = new Transaction();
-    transaction.setSender(sender);
-    transaction.setReceiver(receiver);
-    transaction.setAmount(transactionDto.amount());
-    transaction.setTimestamp(LocalDateTime.now());
-
-    sender.setBalance(sender.getBalance().subtract(transactionDto.amount()));
-    receiver.setBalance(receiver.getBalance().add(transactionDto.amount()));
+    sender.debit(transactionDto.amount());
+    receiver.credit(transactionDto.amount());;
 
     transactionRepository.save(transaction);
     userService.saveUser(sender);
@@ -61,6 +57,24 @@ public class TransactionService {
 
     return transaction;
   }
+
+  private void validateTransaction(TransactionDto transactionDto, User sender) {
+
+        if (!sender.isMerchant()) {
+            throw new TransactionNotAllowedForUserTypeException();
+        }
+
+        if (!sender.isBalancerEqualOrGreatherThan(transactionDto.amount())) {
+            throw new InsufficientBalanceException();
+        }
+
+        if (!authorizeTransaction(sender, transactionDto.amount())) {
+          throw new TransactionNotAuthorizedException();
+        }
+
+       
+
+    }
 
   public boolean authorizeTransaction(User sender, BigDecimal amount) {
 
