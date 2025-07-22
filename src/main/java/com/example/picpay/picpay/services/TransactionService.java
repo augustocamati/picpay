@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.picpay.picpay.domain.transactions.Transaction;
 import com.example.picpay.picpay.domain.user.User;
 import com.example.picpay.picpay.dto.request.transaction.TransactionDto;
+import com.example.picpay.picpay.exceptions.TransactionNotAuthorizedException;
 import com.example.picpay.picpay.repositories.TransactionRepository;
 
 @Service
@@ -36,7 +37,7 @@ public class TransactionService {
     userService.validateTransaction(sender, transactionDto.amount());
 
     if (!authorizeTransaction(sender, transactionDto.amount())) {
-      throw new Exception("Transaction not authorized");
+      throw new TransactionNotAuthorizedException();
     }
 
     Transaction transaction = new Transaction();
