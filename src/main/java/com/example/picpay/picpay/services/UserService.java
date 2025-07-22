@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.example.picpay.picpay.domain.user.User;
 import com.example.picpay.picpay.domain.user.UserType;
 import com.example.picpay.picpay.dto.request.CreateUserDto;
+import com.example.picpay.picpay.exceptions.InsufficientBalanceException;
+import com.example.picpay.picpay.exceptions.TransferNotAuthorizedException;
+import com.example.picpay.picpay.exceptions.UserNotFoundException;
 import com.example.picpay.picpay.repositories.UserRepository;
 
 @Service
@@ -18,17 +21,17 @@ public class UserService {
 
    public void validateTransaction(User sender, BigDecimal amount) throws Exception {
        if (sender.getBalance().compareTo(amount) < 0) {
-           throw new Exception("Saldo insuficiente");
+           throw new InsufficientBalanceException();
        }
 
        if(sender.getUserType() == UserType.MERCHANT) {
-           throw new Exception("Usuário não pode realizar transações");
+           throw new TransferNotAuthorizedException();
        }
 
    }
 
    public User findUserById(Long id) throws Exception {
-       return userRepository.findById(id).orElseThrow(() -> new Exception("Usuário não encontrado"));
+       return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
    }
 
    public User creatUser(CreateUserDto createUserDto) {
