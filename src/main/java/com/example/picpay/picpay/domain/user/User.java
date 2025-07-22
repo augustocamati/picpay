@@ -3,6 +3,7 @@ package com.example.picpay.picpay.domain.user;
 import java.math.BigDecimal;
 
 import com.example.picpay.picpay.dto.request.CreateUserDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -64,6 +65,8 @@ public class User {
   public void debit(BigDecimal amount) {
     this.balance = this.balance.subtract(amount);
   }
+
+  @JsonIgnore
 
   public boolean isMerchant() {
     return this.userType == UserType.MERCHANT;
