@@ -19,17 +19,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void validateTransaction(User sender, BigDecimal amount) throws Exception {
-        if (sender.getBalance().compareTo(amount) < 0) {
-            throw new InsufficientBalanceException();
-        }
-
-        if (sender.getUserType() == UserType.MERCHANT) {
-            throw new TransactionNotAllowedForUserTypeException();
-        }
-
-    }
-
     public User findUserById(Long id) throws Exception {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
