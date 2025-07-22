@@ -19,7 +19,7 @@ public class NotificationService {
    ResponseEntity<String> response = restTemplate.postForEntity("https://util.devi.tools/api/v1/notify",  notification, String.class);
 
    if(!response.getStatusCode().is2xxSuccessful()) {
-      throw new RuntimeException("Failed to send notification");
+     System.out.println("Failed to send notification: " + response.getStatusCode());
     
     }
     System.out.println("Notification sent: " + message);
